@@ -4,8 +4,9 @@ import path from 'path';
 
 import { Project } from '@pnpm/types';
 
-import { Workspace } from '@/util/Workspace.js';
 import { TargetPackage } from '@/util/TargetPackage.js';
+import { Workspace } from '@/util/Workspace.js';
+import { writeJsonFile } from '@/util/json.js';
 
 class PackageBundler {
 
@@ -62,10 +63,7 @@ class PackageBundler {
 
             dependency = this.replaceWorkspaceDependenciesVersions(dependency, '..');
 
-            fs.writeFileSync(
-                path.join(distPath, 'package.json'),
-                JSON.stringify(dependency.manifest, null, 2),
-            );
+            writeJsonFile(path.join(distPath, 'package.json'), dependency.manifest);
         });
     }
 
@@ -95,10 +93,7 @@ class PackageBundler {
             `./${this.workspaceDependenciesFolder}`,
         );
 
-        fs.writeFileSync(
-            path.join(this.outDir, 'package.json'),
-            JSON.stringify(targetPackage.manifest, null, 2),
-        );
+        writeJsonFile(path.join(this.outDir, 'package.json'), targetPackage.manifest);
     }
 }
 
