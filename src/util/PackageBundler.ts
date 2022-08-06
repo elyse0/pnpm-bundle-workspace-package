@@ -53,7 +53,7 @@ class PackageBundler {
     copyTargetPackageWorkspaceDependencies() {
         this.targetPackage.workspaceDependencies.forEach((dependency) => {
             const directoryName = path.basename(dependency.dir);
-            const distPath = `${this.outDir}/${this.workspaceDependenciesFolder}/${directoryName}`;
+            const distPath = path.join(this.outDir, this.workspaceDependenciesFolder, directoryName);
             copySync(
                 dependency.dir,
                 distPath,
