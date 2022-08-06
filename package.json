@@ -1,5 +1,5 @@
 {
-  "name": "pnpm-bundled-workspace-package",
+  "name": "pnpm-bundle-workspace-package",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
