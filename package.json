@@ -6,7 +6,7 @@
   "author": "elyse0",
   "type": "module",
   "bin": {
-    "pnpm-bundled-workspace": "dist/index.js"
+    "pnpm-bundle-workspace-package": "dist/index.js"
   },
   "scripts": {
     "build": "tsc && tsc-alias"
