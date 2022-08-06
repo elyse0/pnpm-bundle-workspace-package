@@ -78,7 +78,6 @@ class PackageBundler {
                         path.join(targetPackage.dir, file),
                         path.join(this.outDir, file),
                         {
-                            preserveTimestamps: true,
                             filter: (src, _) => {
                                 return !this.getIgnorePatterns().some(pattern => src.includes(pattern));
                             },
