@@ -11,6 +11,10 @@ import { fileURLToPath } from 'url';
 const main = async () => {
     const argParserOptions = argsParser.opts();
 
+    if (!argsParser.processedArgs[0]) {
+        throw Error('Target package name or path is required');
+    }
+
     const targetPackageNameOrPath = argsParser.processedArgs[0];
 
     const filename = fileURLToPath(import.meta.url);
