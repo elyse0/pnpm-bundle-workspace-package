@@ -22,10 +22,6 @@ class PackageBundler {
         this.outDir = outDir;
     }
 
-    getIgnorePatterns(): string[] {
-        return [ 'node_modules', 'package.json', `${this.outDir}` ];
-    }
-
     createDistFolder() {
         if (existsSync(this.outDir)) {
             throw Error(`Dist folder already exists ${this.outDir}`);
@@ -49,6 +45,11 @@ class PackageBundler {
         return pkg;
     }
 
+    private filterFiles(src: string, _: string) {
+        const ignorePatterns = [ 'node_modules', 'package.json', `${this.outDir}` ]
+        return !ignorePatterns.some(pattern => src.includes(pattern));
+    }
+
     copyTargetPackageWorkspaceDependencies() {
         this.targetPackage.workspaceDependencies.forEach((dependency) => {
             const directoryName = path.basename(dependency.dir);
@@ -57,7 +58,7 @@ class PackageBundler {
                 dependency.dir,
                 distPath,
                 {
-                    filter: (src, _) => !this.getIgnorePatterns().some(pattern => src.includes(pattern)),
+                    filter: this.filterFiles,
                 },
             );
 
@@ -78,9 +79,7 @@ class PackageBundler {
                         path.join(targetPackage.dir, file),
                         path.join(this.outDir, file),
                         {
-                            filter: (src, _) => {
-                                return !this.getIgnorePatterns().some(pattern => src.includes(pattern));
-                            },
+                            filter: this.filterFiles,
                         },
                     );
                 }
