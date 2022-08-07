@@ -24,15 +24,15 @@ class PackageBundler {
     }
 
     createDistFolder() {
-        if (!existsSync(this.config.outDir)) {
-            mkdirSync(this.config.outDir, { recursive: true });
+        if (existsSync(this.config.outDir)) {
+            if (this.config.overwrite) {
+                rmSync(this.config.outDir, { recursive: true });
+            } else {
+                throw Error(`Output directory (${this.config.outDir}) already exists`);
+            }
         }
 
-        if (this.config.overwrite) {
-            rmSync(this.config.outDir, { recursive: true });
-        } else {
-            throw Error(`Output directory (${this.config.outDir}) already exists`);
-        }
+        mkdirSync(this.config.outDir, { recursive: true });
     }
 
     replaceWorkspaceDependenciesVersions(pkg: Project, relativePath: string): Project {
