@@ -1,5 +1,5 @@
 import fs, { existsSync, mkdirSync } from 'fs';
-import fse, { copySync } from 'fs-extra';
+import fse from 'fs-extra';
 import path from 'path';
 
 import { Project } from '@pnpm/types';
@@ -54,7 +54,7 @@ class PackageBundler {
         this.targetPackage.workspaceDependencies.forEach((dependency) => {
             const directoryName = path.basename(dependency.dir);
             const distPath = path.join(this.outDir, this.workspaceDependenciesFolder, directoryName);
-            copySync(
+            fse.copySync(
                 dependency.dir,
                 distPath,
                 {
