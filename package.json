@@ -1,10 +1,13 @@
 {
   "name": "pnpm-bundle-workspace-package",
   "version": "1.0.0",
-  "main": "index.js",
   "license": "MIT",
   "author": "elyse0",
   "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "bin": {
     "pnpm-bundle-workspace-package": "dist/index.js"
   },
