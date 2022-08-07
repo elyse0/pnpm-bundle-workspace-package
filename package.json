@@ -14,10 +14,10 @@
   "dependencies": {
     "@pnpm/find-workspace-packages": "^4.0.26",
     "@pnpm/logger": "^4.0.0",
-    "commander": "^9.4.0",
     "fs-extra": "^10.1.0",
     "fs-readdir-recursive": "^1.1.0",
-    "glob": "^8.0.3"
+    "glob": "^8.0.3",
+    "yargs": "^17.5.1"
   },
   "devDependencies": {
     "@pnpm/types": "^8.5.0",
@@ -25,6 +25,7 @@
     "@types/fs-readdir-recursive": "^1.1.0",
     "@types/glob": "^7.2.0",
     "@types/node": "^18.6.3",
+    "@types/yargs": "^17.0.11",
     "tsc-alias": "^1.7.0",
     "typescript": "^4.7.4"
   }

@@ -1,17 +1,18 @@
-import { Command } from 'commander';
+import yargs from 'yargs';
 
-const argsParser = new Command();
-
-argsParser
-    .name('pnpm-bundle-workspace')
-    .description('CLI to bundle a single pnpm package')
-    .version('1.0.0')
-    .argument('[target]', 'Target package name or path')
-    .option('--outDir [path]', 'Destination', 'bundled')
-    .option('--overwrite', 'Overwrite output directory', true)
-
-argsParser.parse();
+const argsParserPromise = yargs(process.argv.slice(2)).options({
+    outDir: {
+        description: 'Target package name or path',
+        type: 'string',
+        default: 'bundled',
+    },
+    overwrite: {
+        description: 'Overwrite output directory',
+        type: 'boolean',
+        default: true,
+    },
+}).argv;
 
 export {
-    argsParser,
+    argsParserPromise,
 };

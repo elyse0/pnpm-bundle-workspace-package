@@ -1,7 +1,7 @@
 import { Project } from '@pnpm/types';
 import path from 'path';
 
-import { argsParser } from '@/util/args-parser.js';
+import { argsParserPromise } from '@/util/args-parser.js';
 import { Workspace } from '@/util/Workspace.js';
 import { PackageBundler } from '@/util/PackageBundler.js';
 
@@ -11,19 +11,18 @@ import { Config } from '@/types/cli.js';
 import { fileURLToPath } from 'url';
 
 const main = async () => {
-    const argParserOptions = argsParser.opts();
+    const argsParser = await argsParserPromise;
 
-    if (!argsParser.processedArgs[0]) {
+    const targetPackageNameOrPath = argsParser._[0];
+    if (!targetPackageNameOrPath || typeof targetPackageNameOrPath !== 'string') {
         throw Error('Target package name or path is required');
     }
 
     const config: Config = {
-        outDir: argParserOptions.outDir,
-        overwrite: argParserOptions.overwrite,
+        outDir: argsParser.outDir,
+        overwrite: argsParser.overwrite,
         workspaceDependenciesFolder: 'workspace-dependencies',
     };
-
-    const targetPackageNameOrPath = argsParser.processedArgs[0];
 
     const filename = fileURLToPath(import.meta.url);
     const dirname = path.dirname(filename);
