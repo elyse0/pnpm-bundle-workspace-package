@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "license": "MIT",
   "author": "elyse0",
+  "repository": "https://github.com/elyse0/pnpm-bundle-workspace-package",
   "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
