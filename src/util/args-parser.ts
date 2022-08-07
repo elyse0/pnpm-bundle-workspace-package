@@ -8,6 +8,7 @@ argsParser
     .version('1.0.0')
     .argument('[target]', 'Target package name or path')
     .option('--outDir [path]', 'Destination', 'bundled')
+    .option('--overwrite', 'Overwrite output directory', true)
 
 argsParser.parse();
 

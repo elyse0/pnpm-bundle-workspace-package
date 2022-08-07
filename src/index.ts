@@ -5,6 +5,8 @@ import { argsParser } from '@/util/args-parser.js';
 import { Workspace } from '@/util/Workspace.js';
 import { PackageBundler } from '@/util/PackageBundler.js';
 
+import { Config } from '@/types/cli.js';
+
 // https://bobbyhadz.com/blog/javascript-dirname-is-not-defined-in-es-module-scope
 import { fileURLToPath } from 'url';
 
@@ -14,6 +16,12 @@ const main = async () => {
     if (!argsParser.processedArgs[0]) {
         throw Error('Target package name or path is required');
     }
+
+    const config: Config = {
+        outDir: argParserOptions.outDir,
+        overwrite: argParserOptions.overwrite,
+        workspaceDependenciesFolder: 'workspace-dependencies',
+    };
 
     const targetPackageNameOrPath = argsParser.processedArgs[0];
 
@@ -33,7 +41,7 @@ const main = async () => {
     const packageBundler = new PackageBundler(
         workspace,
         targetPackage,
-        argParserOptions.outDir,
+        config,
     );
 
     packageBundler.createDistFolder();

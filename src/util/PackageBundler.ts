@@ -1,4 +1,4 @@
-import fs, { existsSync, mkdirSync } from 'fs';
+import fs, { existsSync, mkdirSync, rmSync } from 'fs';
 import fse from 'fs-extra';
 import path from 'path';
 
@@ -8,27 +8,31 @@ import { TargetPackage } from '@/util/TargetPackage.js';
 import { Workspace } from '@/util/Workspace.js';
 import { writeJsonFile } from '@/util/json.js';
 
+import { Config } from '@/types/cli.js';
+
 class PackageBundler {
 
     workspace: Workspace;
     targetPackage: TargetPackage;
 
-    outDir: string;
-    workspaceDependenciesFolder: string = 'workspace-dependencies';
+    config: Config;
 
-    constructor(workspace: Workspace, targetPackage: Project, outDir: string) {
+    constructor(workspace: Workspace, targetPackage: Project, config: Config) {
         this.workspace = workspace;
         this.targetPackage = new TargetPackage(targetPackage, workspace);
-        this.outDir = outDir;
+        this.config = config;
     }
 
     createDistFolder() {
-        if (existsSync(this.outDir)) {
-            throw Error(`Dist folder already exists ${this.outDir}`);
-            // rmSync(this.distPath, { recursive: true });
+        if (!existsSync(this.config.outDir)) {
+            mkdirSync(this.config.outDir, { recursive: true });
         }
 
-        mkdirSync(this.outDir, { recursive: true });
+        if (this.config.overwrite) {
+            rmSync(this.config.outDir, { recursive: true });
+        } else {
+            throw Error(`Output directory (${this.config.outDir}) already exists`);
+        }
     }
 
     replaceWorkspaceDependenciesVersions(pkg: Project, relativePath: string): Project {
@@ -46,14 +50,15 @@ class PackageBundler {
     }
 
     private filterFiles(src: string, _: string) {
-        const ignorePatterns = [ 'node_modules', 'package.json', `${this.outDir}` ]
+        // In the last iteration 'this.config' is undefined for some weird reason
+        const ignorePatterns = [ 'node_modules', 'package.json', this.config?.outDir ];
         return !ignorePatterns.some(pattern => src.includes(pattern));
     }
 
     copyTargetPackageWorkspaceDependencies() {
         this.targetPackage.workspaceDependencies.forEach((dependency) => {
             const directoryName = path.basename(dependency.dir);
-            const distPath = path.join(this.outDir, this.workspaceDependenciesFolder, directoryName);
+            const distPath = path.join(this.config.outDir, this.config.workspaceDependenciesFolder, directoryName);
             fse.copySync(
                 dependency.dir,
                 distPath,
@@ -74,12 +79,12 @@ class PackageBundler {
         const filesToCopy = fs.readdirSync(targetPackage.dir);
 
         filesToCopy.forEach(file => {
-                if (file !== this.outDir) {
+                if (file !== this.config.outDir) {
                     fse.copySync(
                         path.join(targetPackage.dir, file),
-                        path.join(this.outDir, file),
+                        path.join(this.config.outDir, file),
                         {
-                            filter: this.filterFiles,
+                            filter: this.filterFiles
                         },
                     );
                 }
@@ -88,10 +93,10 @@ class PackageBundler {
 
         targetPackage = this.replaceWorkspaceDependenciesVersions(
             targetPackage,
-            `./${this.workspaceDependenciesFolder}`,
+            `./${this.config.workspaceDependenciesFolder}`,
         );
 
-        writeJsonFile(path.join(this.outDir, 'package.json'), targetPackage.manifest);
+        writeJsonFile(path.join(this.config.outDir, 'package.json'), targetPackage.manifest);
     }
 }
 
