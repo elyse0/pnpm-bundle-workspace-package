@@ -50,3 +50,9 @@ const main = async () => {
 
 main().then(() => {
 });
+
+export {
+    PackageBundler,
+    Project,
+    Workspace,
+};
